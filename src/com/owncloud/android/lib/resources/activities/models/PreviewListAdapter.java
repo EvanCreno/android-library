@@ -27,6 +27,7 @@ package com.owncloud.android.lib.resources.activities.models;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class PreviewListAdapter extends TypeAdapter<PreviewList> {
     @Override
     public PreviewList read(JsonReader in) throws IOException {
         PreviewList previewList = new PreviewList();
-        in.beginArray();
+        in.beginObject();
 
         while (in.hasNext()) {
             String name = in.nextName();
@@ -55,25 +56,36 @@ public class PreviewListAdapter extends TypeAdapter<PreviewList> {
         }
 
 
-        in.endArray();
+        in.endObject();
 
         return previewList;
     }
 
     PreviewObject readObject(String tag,JsonReader in) throws IOException {
-        in.beginObject();
         PreviewObject preview = new PreviewObject();
+
         while (in.hasNext()) {
-            String name = in.nextName();
-            if ("source".contentEquals(name)){
-                preview.setSource(in.nextString());
-            } else if ("link".contentEquals(name)) {
-                preview.setLink(in.nextString());
-            } else if ("isMimeTypeIcon".contentEquals(name)) {
-                preview.setMimeTypeIcon(in.nextBoolean());
+            String name = "";
+            if (in.peek() == JsonToken.NAME) {
+                name = in.nextName();
+            } else {
+                in.nextString();
+            }
+
+            switch (name) {
+                case "source":
+                    preview.setSource(in.nextString());
+                    break;
+
+                case "link":
+                    preview.setLink(in.nextString());
+                    break;
+
+                case "isMimeTypeIcon":
+                    preview.setMimeTypeIcon(in.nextBoolean());
+                    break;
             }
         }
-        in.endObject();
         return preview;
     }
 }
