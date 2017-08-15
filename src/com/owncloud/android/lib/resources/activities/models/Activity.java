@@ -57,6 +57,8 @@ public class Activity {
     @SerializedName("object_name")
     public String objectName;
 
+    public PreviewList previews;
+
     @SerializedName("subject_rich")
     public RichElement richSubjectElement;
 
@@ -179,5 +181,13 @@ public class Activity {
 
     public void setRichSubjectElement(RichElement richSubjectElement) {
         this.richSubjectElement = richSubjectElement;
+    }
+
+    public PreviewList getPreviews() {
+        return previews;
+    }
+
+    public void setPreviews(PreviewList previews) {
+        this.previews = previews;
     }
 }

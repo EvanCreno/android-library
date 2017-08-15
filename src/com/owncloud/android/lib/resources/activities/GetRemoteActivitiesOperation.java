@@ -38,6 +38,8 @@ import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.activities.models.Activity;
+import com.owncloud.android.lib.resources.activities.models.PreviewListAdapter;
+import com.owncloud.android.lib.resources.activities.models.PreviewObject;
 import com.owncloud.android.lib.resources.activities.models.RichElement;
 import com.owncloud.android.lib.resources.activities.models.RichElementTypeAdapter;
 import com.owncloud.android.lib.resources.status.OwnCloudVersion;
@@ -122,7 +124,8 @@ public class GetRemoteActivitiesOperation extends RemoteOperation{
         JsonArray jsonDataArray = jo.getAsJsonObject(NODE_OCS).getAsJsonArray(NODE_DATA);
 
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(RichElement.class,new RichElementTypeAdapter())//Add TypeAdapter to parse RichElement
+                .registerTypeAdapter(RichElement.class, new RichElementTypeAdapter())//Add TypeAdapter to parse RichElement
+                .registerTypeAdapter(PreviewObject.class, new PreviewListAdapter())//Add TypeAdapter to parse Previews
                 .create();
         Type listType = new TypeToken<List<Activity>>(){}.getType();
 
