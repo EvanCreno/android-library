@@ -36,43 +36,40 @@ import java.io.IOException;
  * PreviewList Parser
  */
 
-public class PreviewListAdapter extends TypeAdapter<PreviewList> {
+public class PreviewListAdapter extends TypeAdapter<PreviewObject> {
 
     @Override
-    public void write(JsonWriter out, PreviewList value) throws IOException {
+    public void write(JsonWriter out, PreviewObject value) throws IOException {
 
     }
 
     @Override
-    public PreviewList read(JsonReader in) throws IOException {
-        PreviewList previewList = new PreviewList();
+    public PreviewObject read(JsonReader in) throws IOException {
+        PreviewObject preview = new PreviewObject();
         in.beginObject();
 
         while (in.hasNext()) {
             String name = in.nextName();
             if (name != null && !name.isEmpty()) {
-                previewList.getPreviews().add(readObject(name,in));
+                preview = readObject(name, in);
             }
         }
 
 
         in.endObject();
 
-        return previewList;
+        return preview;
     }
 
-    PreviewObject readObject(String tag,JsonReader in) throws IOException {
+    PreviewObject readObject(String tag, JsonReader in) throws IOException {
         PreviewObject preview = new PreviewObject();
 
-        while (in.hasNext()) {
-            String name = "";
+        do {
             if (in.peek() == JsonToken.NAME) {
-                name = in.nextName();
-            } else {
-                in.nextString();
+                tag = in.nextName();
             }
 
-            switch (name) {
+            switch (tag) {
                 case "source":
                     preview.setSource(in.nextString());
                     break;
@@ -85,7 +82,8 @@ public class PreviewListAdapter extends TypeAdapter<PreviewList> {
                     preview.setMimeTypeIcon(in.nextBoolean());
                     break;
             }
-        }
+        } while (in.hasNext());
+
         return preview;
     }
 }
